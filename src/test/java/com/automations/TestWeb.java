@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CheckChrome {
+public class TestWeb {
     private WebDriver driver;
     private WebDriverWait wait;
     private final String linkTest = "https://acp-test.mk.com.vn:1982/#/login";

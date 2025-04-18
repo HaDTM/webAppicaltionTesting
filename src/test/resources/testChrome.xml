@@ -3,7 +3,7 @@
 <suite name="TestSuite">
     <test name="Login Test">
         <classes>
-            <class name="com.automations.CheckChrome"/>
+            <class name="com.automations.TestWeb"/>
         </classes>
     </test>
 </suite>
