@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,6 +25,7 @@ public class TestWeb {
     private final String linkTest = "https://acp-test.mk.com.vn:1982/#/login";
     private final String userName = "testuatmk@mailinator.com";
     private final String password = "TestMK@1234";
+    private final String accountName = "TESTUAT";
 
 
     @BeforeClass
@@ -41,7 +43,7 @@ public class TestWeb {
         driver.quit();
     }
 
-    @Test
+    @Test(priority = 0)
     public void testLogin() {
 
         // Điền thông tin đăng nhập
@@ -124,7 +126,6 @@ public class TestWeb {
             Matcher matcher = pattern.matcher(fullContent);
             if (matcher.find()) {
                 otpCode = matcher.group(0);
-                System.out.println("Try Regex");
             } else {
                 takeScreenshot("error_no_otp.png");
                 throw new RuntimeException("Không tìm thấy OTP trong email! Đã chụp ảnh màn hình.");
@@ -160,6 +161,22 @@ public class TestWeb {
         }
     }
 
+
+    @Test(priority = 1)
+    public void verifyLogin(){
+        //Click menu báo cáo
+        clickElementByXpath("//span[text() = \"Báo cáo\"]");
+        clickElementByXpath("//a[text() = \"Báo cáo log hệ thống\"]");
+
+        //So sánh tài khoản đăng nhập với log đăng nhập của hệ thống
+        try {
+            WebElement loginLog = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//tr[@class = \"ant-table-row ant-table-row-level-0\"][1])/td[2]")));
+            Assert.assertEquals(loginLog.getText(),accountName,"Sai tài khoản");
+        }catch (Exception e){
+            System.out.println("Không tìm thấy element LoginLog");
+        }
+    }
+
     private void takeScreenshot(String fileName) {
         try {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -169,6 +186,17 @@ public class TestWeb {
             System.err.println("Lỗi khi chụp ảnh màn hình: " + e.getMessage());
         }
     }
+
+
+    private void clickElementByXpath( String xpath){
+        try {
+            WebElement elementXpath = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+            elementXpath.click();
+        }catch (Exception e){
+            System.out.println("Không tìm thấy phần tử " + xpath);
+        }
+    }
+
 
     public void scrollToElement(WebElement element) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
