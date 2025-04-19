@@ -162,7 +162,7 @@ public class TestWeb {
     }
 
 
-    @Test(priority = 1)
+    @Test(priority = 1, dependsOnMethods = {"testLogin"})
     public void verifyLogin(){
         //Click menu báo cáo
         clickElementByXpath("//span[text() = \"Báo cáo\"]");
